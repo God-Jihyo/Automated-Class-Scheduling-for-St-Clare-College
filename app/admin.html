@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" type="png" href="../assets/images/sccicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="admin.css?v=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,100,0,0&icon_names=bento" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+
+
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="logo-section">
+                    <img src="../assets/images/sccicon.png" alt="Profile" class="profile-pic" id="userProfileImg">
+                    
+                    <div class="admin-info">
+                        <h2>St. Clare College</h2>
+                        <p>Admin Portal</p>
+                    </div>
+                </div>
+
+            <nav class="nav-menu">
+                <a class="active" href="#" data-page="dashboard">
+                    <i class="fa-solid fa-house"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" data-page="sections">
+                    <i class="fa-solid fa-layer-group"></i> <span>Sections</span>
+                </a>
+                <a href="#" data-page="schedule">
+                    <i class="fa-solid fa-calendar-days"></i> <span>Schedule</span>
+                </a>
+                <a href="#" data-page="subjects">
+                    <i class="fa-solid fa-book"></i> <span>Subjects</span>
+                </a>
+                <a href="#" data-page="teachers">
+                    <i class="fa-solid fa-chalkboard-user"></i> <span>Teachers</span>
+                </a>
+                <a href="#" data-page="students">
+                    <i class="fa-solid fa-user-graduate"></i> <span>Students</span>
+                </a>
+                <a href="#" data-page="rooms">
+                    <i class="fa-solid fa-door-open"></i> <span>Rooms</span>
+                </a>
+                <a href="#" data-page="calendar">
+                    <i class="fa-solid fa-calendar-days"></i> <span>Event Calendar</span>
+                </a>
+                <a href="#" data-page="logs_reports">
+                    <i class="fa-solid fa-file-invoice"></i> <span>Logs & Reports</span>
+                </a>
+                <a href="#" data-page="archived">
+                    <i class="fa fa-archive"></i> <span>Archive</span>
+                </a>
+                <a href="#" id="logoutBtn">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span>Log out</span>
+                </a>
+            </nav>
+        </aside>
+        
+        <div class="overlay"></div>
+
+        <main class="content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="togglebtn" id="toggleBtn">
+                        <span class="material-symbols-outlined">bento</span>
+                    </button>
+                    <div class="welcome-text">
+                        <h1>Welcome back, Administrator!</h1>
+                        <p>S.Y 2025-2026 • <span id="liveDateTime">Loading...</span></p>
+                    </div>
+                </div> 
+                <div class="active-term-display">
+                    <strong>Current Term:</strong> 
+                    <span id="displayYear" class="term-highlight">Loading...</span> | 
+                    <span id="displaySemester" class="term-highlight">...</span>
+                    <button class="change-term-btn" onclick="openTermModal()">Change</button>
+                </div>
+
+                <div id="termModal" class="modal">
+                    <div class="modal-content term-modal-content">
+                        <span class="close-btn" onclick="closeTermModal()">&times;</span>
+                        <h2>Change Academic Term</h2>
+                        <p class="term-warning-text">Warning: Changing the term will clear the current dashboard view and load the schedules/subjects for the new term.</p>
+                        
+                        <label>Academic Year</label>
+                        <input type="text" id="termYearInput" placeholder="e.g., 2025-2026">
+                        
+                        <label>Semester</label>
+                        <select id="termSemInput">
+                            <option value="1">1st Semester</option>
+                            <option value="2">2nd Semester</option>
+                            <option value="3">Summer</option>
+                        </select>
+                        
+                        <button class="save-term-btn" onclick="saveActiveTerm()">Save & Reload</button>
+                    </div>
+                </div>
+            </header>
+
+            <section id="dashboard" class="page">
+                <div class="cards-container">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                             <span class="stat-label">TEACHERS</span>
+                            <h2 id="count_teachers">45</h2>
+                        </div>
+                        <div class="stat-icon icon-blue">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">STUDENTS</span>
+                            <h2 id="count_students">1250</h2>
+                        </div>
+                        <div class="stat-icon icon-green">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">ROOMS</span>
+                            <h2 id="count_rooms">59</h2>
+                        </div>
+                        <div class="stat-icon icon-orange">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" id="conflictCard" data-page="reports"> 
+                        <div class="stat-info">
+                            <span class="stat-label">SCHEDULE CONFLICTS</span>
+                            <h2 id="count_conflicts" class="text-red">3</h2>
+                        </div>
+                        <div class="stat-icon icon-red">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="charts">
+                    <div class="chart-card">
+                        <h3>Students Per Section</h3>
+                        <canvas id="studentsChart"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Rooms by Department</h3>
+                        <canvas id="roomsChart"></canvas>
+                    </div>
+                </section>
+            </section>
+                
+            <section id="subjects" class="page hidden">
+                <h2 class="section-title">SUBJECTS</h2>
+
+                <div class="filter-bar">
+                     <select id="yearLevel">
+                        <option>YEAR LEVEL</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+
+                    <select id="Course">
+                        <option>COURSE</option>
+                        <option value="1">BSBA</option>
+                        <option value="2">BSCS</option>
+                        <option value="3">BSTM</option>
+                        <option value="4">BSHM</option>
+                        <option value="5">BEED</option>
+                        <option value="6">BSED-ENG</option>
+                        <option value="7">BSED-MATH</option>
+                        <option value="8">POLSCI</option>
+                    </select>
+
+                    <button id="openModal" class="create-btn">+ CREATE NEW SUBJECT</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="subjectsTable">
+                        <thead>
+                            <tr>
+                                <th>CODE</th>
+                                <th>DESCRIPTION</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectsBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+           <section id="schedule" class="page hidden">
+                <div class="section-header-modern" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h2 class="section-title" style="margin-bottom: 5px;">
+                            <span class="title-icon-box"><i class="fa-solid fa-calendar-days"></i></span>
+                            Schedule Management
+                        </h2>
+                        <p style="color: #666; font-size: 14px; margin-top: 0;">Adjust schedules manually. Choose between single section focus or the master campus view.</p>
+                    </div>
+
+                    <div class="editor-mode-toggle" style="background: #f1f5f9; padding: 5px; border-radius: 10px; display: flex; gap: 5px; margin-top: 10px; position: relative; z-index: 9999;">
+                        <button class="pill-btn active" id="btnSingleMode" onclick="toggleEditorMode('single')" style="padding: 8px 15px; border: none; border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                            <i class="fa-solid fa-user-pen"></i> Single Section
+                        </button>
+                        <button class="pill-btn" id="btnMasterMode" onclick="toggleEditorMode('master')" style="padding: 8px 15px; border: none; border-radius: 7px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                            <i class="fa-solid fa-globe"></i> Master Editor (Beta)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="singleEditorView">
+                    <div class="sections-controls" style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <div id="activeSectionEditorPill" class="course-pill active" style="display:none; font-size: 14px; background: #c83b3b !important; color:white; padding: 10px 20px;">
+                            <span><i class="fa-solid fa-layer-group"></i> Editing:</span> 
+                            <strong id="editorActiveSectionName">-</strong>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-left: auto;">
+                            <button id="btnViewAllSections" class="create-btn" style="background-color: #fbdc0e; color: #1a2b56;">
+                                <i class="fas fa-eye"></i> View All Schedules
+                            </button>
+                            <button id="btnSaveScheduleManual" class="create-btn" style="display:none; background-color: #c83b3b; color: white;">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Manual Changes
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="generatedSchedulesContainer">
+                        <div class="empty-schedule-state" style="text-align:center; padding: 60px; color: #888; background: white; border-radius: 12px;">
+                            <i class="fa-solid fa-calendar" style="font-size: 4rem; margin-bottom: 15px; color: #ddd;"></i>
+                            <p style="font-size: 16px;">No specific schedule selected.</p>
+                            <p style="font-size: 13px; color: #999;">Generate or view a schedule from the <strong>Sections</strong> tab.</p>
+                        </div>
+                    </div>
+
+                    <div id="manualEditorGridContainer" class="timetable-editor-container hidden">
+                        <div class="editor-header">
+                            <div class="header-left">
+                                <h2 class="editor-title"><i class="fa-solid fa-calendar-alt"></i> Timetable Editor</h2>
+                            </div>
+                            
+                            <div class="header-filters">
+                                <select id="editorFilterCourse" class="filter-dropdown">
+                                    <option value="">Course</option>
+                                    <option value="1">BSBA</option>
+                                    <option value="2">BSCS</option>
+                                    <option value="3">BSTM</option>
+                                    <option value="4">BSHM</option>
+                                    <option value="5">BEED</option>
+                                </select>
+                                <select id="editorFilterYear" class="filter-dropdown">
+                                    <option value="">Year Level</option>
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                                <select id="editorFilterSection" class="filter-dropdown">
+                                    <option value="">Section</option>
+                                </select>
+                                <button class="btn-refresh" id="refreshEditorData" title="Update Grid">
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
+                                
+                                <button id="publishScheduleBtn" class="btn-primary success-btn">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Publish Schedule
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="editor-content-wrapper">
+                            <aside class="editor-sidebar">
+                                <div class="sidebar-header">
+                                    <h4>Manage Subjects/Classes</h4>
+                                    <p class="instruction-text">Drag subjects to the timetable grid to assign a slot.</p>
+                                </div>
+                                
+                                <div class="sidebar-search">
+                                    <i class="fa-solid fa-search"></i>
+                                    <input type="text" id="searchUnplaced" placeholder="Search unplaced subjects...">
+                                </div>
+                                
+                                <div id="unplacedSubjectsList" class="unplaced-subjects-container">
+                                </div>
+                            </aside>
+
+                            <main class="grid-section">
+                                <div id="activeEditorSectionBanner" class="active-section-banner">
+                                    <i class="fa-solid fa-graduation-cap"></i> <span id="editorActiveSectionNameDisplay">Select a Section</span>
+                                </div>
+                                
+                                <div class="timetable-grid-wrapper">
+                                    <div id="manualEditorTimeLabels" class="time-labels-column">
+                                        <div class="time-label-spacer"></div>
+                                    </div>
+                                    
+                                    <div class="grid-content">
+                                        <div class="day-header-row">
+                                            <div class="day-header">Monday</div>
+                                            <div class="day-header">Tuesday</div>
+                                            <div class="day-header">Wednesday</div>
+                                            <div class="day-header">Thursday</div>
+                                            <div class="day-header">Friday</div>
+                                            <div class="day-header">Saturday</div>
+                                        </div>
+                                        
+                                        <div id="editorGridArea" class="grid-area">
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="masterEditorView" class="hidden" style="margin-top: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); flex-wrap: wrap;">
+                                
+                                <div style="font-size: 14px; font-weight: 700; color: #475569;">
+                                    <i class="fa-solid fa-hand-pointer"></i> 1. Select Day(s):
+                                </div>
+                                <div class="master-day-picker" style="display: flex; gap: 8px;">
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Monday')">M</button>
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Tuesday')">T</button>
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Wednesday')">W</button>
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Thursday')">Th</button>
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Friday')">F</button>
+                                    <button class="day-btn" onclick="toggleMasterDay(this, 'Saturday')">S</button>
+                                </div>
+
+                                <div style="width: 1px; height: 30px; background: #e2e8f0; margin: 0 10px;"></div>
+
+                                <div style="font-size: 14px; font-weight: 700; color: #475569;">
+                                    <i class="fa-solid fa-filter"></i> 2. Filter Grid:
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <select id="masterFilterCourse" onchange="filterMasterGrid()" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        <option value="">All Courses</option>
+                                        <option value="BSBA">BSBA</option>
+                                        <option value="BSCS">BSCS</option>
+                                        <option value="BSTM">BSTM</option>
+                                        <option value="BSHM">BSHM</option>
+                                        <option value="BEED">BEED</option>
+                                    </select>
+                                    <select id="masterFilterYear" onchange="filterMasterGrid()" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                        <option value="">All Years</option>
+                                        <option value="1">1st Year</option>
+                                        <option value="2">2nd Year</option>
+                                        <option value="3">3rd Year</option>
+                                        <option value="4">4th Year</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="font-size: 12px; color: #64748b; margin-left: auto;">
+                                    <em>3. Drag subject to grid & click a room!</em>
+                                </div>
+                            </div>
+
+                    <div style="display: grid; grid-template-columns: 280px 1fr 300px; gap: 20px; height: calc(100vh - 350px);">
+                        <div class="card" style="display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+                            <div style="padding: 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-weight: 700; font-size: 13px;">
+                                <i class="fa-solid fa-list-check"></i> Unassigned Subjects
+                            </div>
+                            <div id="masterSubjectPool" style="padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                            </div>
+                        </div>
+
+                        <div class="card" style="overflow: auto; padding: 0;">
+                            <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+                                <thead style="position: sticky; top: 0; z-index: 10; background: #f1f5f9;">
+                                    <tr>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; width: 150px; font-size: 12px;">SECTION</th>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; font-size: 11px;">07:30 - 09:00</th>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; font-size: 11px;">09:00 - 10:30</th>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; font-size: 11px;">10:30 - 12:00</th>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; font-size: 11px;">13:00 - 14:30</th>
+                                        <th style="padding: 12px; border: 1px solid #e2e8f0; font-size: 11px;">14:30 - 16:00</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="masterGridBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card" style="display: flex; flex-direction: column; overflow: hidden; padding: 0; background: #f8fafc; border-left: 4px solid var(--primary);">
+                            <div style="padding: 15px; border-bottom: 1px solid #e2e8f0; font-weight: 700; font-size: 13px;">
+                                <i class="fa-solid fa-tower-broadcast"></i> Live Room Radar
+                            </div>
+                            <div id="radarRoomList" style="padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                                <div style="text-align: center; color: #94a3b8; padding-top: 50px;">
+                                    <i class="fa-solid fa-radar" style="font-size: 2rem; opacity: 0.3; margin-bottom: 10px;"></i>
+                                    <p style="font-size: 12px;">Hover over a time slot to see available rooms.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+   
+            <section id="rooms" class="page hidden">
+                <div class="page-header">
+                    <div>
+                    <h1>Room Management</h1>
+                    <div class="live-indicator">
+                        <span class="pulse-dot"></span>
+                        <span>Live — Updated <span id="lastUpdated"></span></span>
+                    </div>
+                    </div>
+                    <div class="header-actions">
+                    <button class="btn btn-alert-pos" id="alertsBtn">
+                        <i data-lucide="bell" style="width:16px;height:16px"></i> Alerts
+                        <span class="alert-badge" id="alertBadge"></span>
+                    </button>
+                    <button class="btn" id="refreshBtn">
+                        <i data-lucide="refresh-cw" style="width:16px;height:16px"></i> Refresh
+                    </button>
+                    <button class="btn btn-primary" id="addRoomBtn">
+                        <i data-lucide="plus" style="width:16px;height:16px"></i> Add Room
+                    </button>
+
+                    </div>
+                </div>
+
+                <div class="card alert-panel hidden" id="alertPanel">
+                    <div class="panel-header">
+                    <div class="panel-header-left">
+                        <i data-lucide="bell" style="width:20px;height:20px;color:var(--primary)"></i>
+                        <span class="card-title">Room Alerts & Notifications</span>
+                        <span class="badge badge-critical" id="alertNewBadge"></span>
+                    </div>
+                    <button class="btn btn-ghost btn-icon-sm" id="closeAlertPanel"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+                    </div>
+                    <div class="alert-list" id="alertList"></div>
+                </div>
+
+                
+
+
+                <div id="conflictAlertContainer" style="display: none; background:#fef2f2; border:1px solid #ef4444; padding:15px; border-radius:8px; margin-bottom:20px; align-items:center; justify-content:space-between; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.1);">
+                    <div style="display:flex; gap:12px; align-items:center; color:#b91c1c;">
+                        <i data-lucide="triangle-alert" style="width:28px; height:28px;"></i>
+                        <div>
+                            <strong style="font-size: 15px;">⚠️ Action Required: Room Conflict Detected</strong>
+                            <p id="conflictAlertMessage" style="margin:4px 0 0 0; font-size:13px; color:#7f1d1d;">
+                                Loading conflict data...
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;" id="conflictActionButtons">
+                        </div>
+                </div>
+
+
+
+                <div class="stats-grid" id="statsGrid"></div>
+
+                <div class="tabs-bar">
+                    <div class="tab-list">
+                    <button class="tab-btn active" data-tab="all-rooms">All Rooms</button>
+                    <button class="tab-btn" data-tab="reservations"><i data-lucide="calendar-clock" style="width:14px;height:14px"></i> Reservations</button>
+                    <button class="tab-btn" data-tab="floor-view">Floor View</button>
+                    </div>
+                    <div class="tab-controls">
+                    <div class="search-wrap">
+                        
+                        <input type="text" placeholder="Search rooms..." id="searchInput" />
+                    </div>
+                    <select class="filter-select" id="filterStatus">
+                        <option value="all">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="reserved">Reserved</option>
+                    </select>
+                    <div class="view-toggle">
+                        <button class="btn btn-icon active" id="gridViewBtn"><i data-lucide="layout-grid" style="width:16px;height:16px"></i></button>
+                        <button class="btn btn-icon" id="listViewBtn"><i data-lucide="list" style="width:16px;height:16px"></i></button>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="tab-content active" id="tab-all-rooms"></div>
+                <div class="tab-content" id="tab-reservations"></div>
+                <div class="tab-content" id="tab-floor-view"></div>
+                <div class="tab-content" id="tab-utilization"></div>
+
+                <div class="modal-overlay" id="alertDetailModal">
+                    <div class="modal" id="alertDetailContent"></div>
+                </div>
+            </section>
+
+
+            
+            <section id="teachers" class="page hidden"> 
+                <h2 class="section-title">TEACHERS</h2>
+
+                <div class="filter-bar">
+                    <div class="search-wrapper">
+                        <i class="fa fa-search search-icon"></i>
+                        <input id="teacherSearch" type="text" placeholder="Search Teacher" />
+                    </div>
+                    
+                    <select id="teacher_department_filter">
+                        <option value="">DEPARTMENT</option>
+                        <option value="BSBA">BSBA</option>
+                        <option value="BSCS">BSCS</option>
+                        <option value="BSTM">BSTM</option>
+                        <option value="BSHM">BSHM</option>
+                        <option value="BEED">BEED</option>
+                        <option value="SHARED">SHARED</option>
+                    </select>
+                    <button id="openTeacherModal" class="create-btn">+ ADD TEACHER</button>
+                </div>
+
+                <div>
+                    <div class="table-container1">
+                        <div class="table-wrapper">
+                            <table id="teachersTable">
+                                <thead>
+                                    <tr>
+                                        <th>TEACHER ID</th>
+                                        <th>NAME</th>
+                                        <th>DEPARTMENT</th>
+                                        <th>COMPUTED HOURS</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teachers_body">
+                                    <tr><td colspan="5">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                 <div class="rightside">
+                    <div id="unselected_teacher_state" class="teacher-empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fa-solid fa-user-magnifying-glass"></i>
+                        </div>
+                        <h3>Select a Teacher</h3>
+                        <p>Click on any teacher row from the table to view their full profile, contact information, and assigned subjects.</p>
+                    </div>
+
+                    <div id="selected_teacher_state" style="display: none; width: 100%; flex-direction: column;">
+                        <div class="avatar-container">
+                            <div class="avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        </div>
+
+                        <h3 id="detail_teacher_name">TEACHER NAME</h3>
+
+                        <div class="info">
+                            <h4>PERSONAL INFORMATION</h4>
+                            <p><strong>Teacher ID:</strong> <span id="detail_teacher_id">-</span></p>
+                            <p><strong>Gender:</strong> <span id="detail_gender">-</span></p>
+                            <p><strong>Email:</strong> <span id="detail_email">-</span></p>
+                            <p><strong>Phone:</strong> <span id="detail_phone">-</span></p>
+
+                            <hr>
+
+                            <h4>PROFESSIONAL INFORMATION</h4>
+                            <p><strong>Department:</strong> <span id="detail_department">-</span></p>
+                            <p><strong>Position:</strong> <span id="detail_position">-</span></p>
+                            <p><strong>Computed Hours:</strong> <span id="detail_teaching_load">-</span></p>
+
+                            <div class="assigned-subjects-container">
+                                <h4 class="assigned-subjects-title">Assigned Subjects</h4>
+                                <div id="assigned_subjects_list" class="assigned-subjects-list">
+                                </div>
+                            </div>
+
+                            <div class="modal-buttons">
+                                <button id="edit_teacher_btn" class="edit">EDIT</button>
+                                <button id="delete_teacher_btn" class="delete">DELETE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sections" class="page hidden">
+                <div class="section-header-modern">
+                    <div>
+                       <h2 class="section-title">
+                            <span class="title-icon-box"><i class="fa-solid fa-layer-group"></i></span>
+                            Class Sections
+                        </h2>
+                        <p>Manage your academic sections and schedules</p>
+                    </div>
+                    <button id="openSectionModal" class="create-btn">+ Add Section</button>
+                </div>
+
+                <div class="sections-summary-cards">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">TOTAL SECTIONS</span>
+                            <h2 id="sections_count_sections">33</h2>
+                        </div>
+                        <div class="stat-icon icon-blue">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">COMPLETE</span>
+                            <h2 id="sections_count_complete">0</h2>
+                        </div>
+                        <div class="stat-icon icon-green">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <span class="stat-label">CONFLICTS</span>
+                            <h2 id="sections_count_conflicts">0</h2>
+                        </div>
+                        <div class="stat-icon icon-red">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sections-controls">
+                    <div class="search-wrapper modern-search">
+                        <i class="fa fa-search search-icon"></i>
+                        <input type="text" id="sectionSearch" placeholder="Search sections...">
+                    </div>
+
+                    <button id="openBulkGenerateModal" class="create-btn">
+                            <i class="fa-solid fa-layer-group"></i> Bulk Auto-Generate
+                    </button>
+
+                    <div class="course-pills" id="courseFilterPills">
+                        <button class="course-pill active" data-course="">All</button>
+                        <button class="course-pill" data-course="1">BSBA</button>
+                        <button class="course-pill" data-course="2">BSCS</button>
+                        <button class="course-pill" data-course="3">BSTM</button>
+                        <button class="course-pill" data-course="4">BSHM</button>
+                        <button class="course-pill" data-course="5">BEED</button>
+                        <button class="course-pill" data-course="6">BSED-ENG</button>
+                        <button class="course-pill" data-course="7">BSED-MATH</button>
+                        <button class="course-pill" data-course="8">POLSCI</button>
+                    </div>
+                </div>
+
+                <div id="sectionsGrid" class="sections-grid">
+                    </div>
+
+                <div id="sectionPagination" class="pagination" style="margin-top: 20px;">
+                </div>
+            </section>
+
+            <section id="students" class="page hidden">
+                <h2 class="section-title">STUDENTS</h2>
+
+                <div class="filter-bar" style="display: flex; gap: 15px; align-items: center; position: relative;">
+                    <div class="search-wrapper" style="margin: 0; flex-grow: 1;">
+                        <i class="fa fa-search search-icon"></i>
+                        <input id="studentSearch" type="text" placeholder="Search ID or Name" />
+                    </div>
+
+                    <div style="position: relative;">
+                        <button id="studentFilterToggleBtn" class="create-btn" style="background-color: white; color: #334155; border: 1px solid #cbd5e1; margin: 0; display: flex; align-items: center; gap: 8px; padding: 10px 16px;">
+                            <i class="fa-solid fa-filter"></i> Filter <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
+                        </button>
+                        
+                        <div id="studentFilterPanel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 16px; width: 280px; z-index: 100; flex-direction: column; gap: 12px;">
+                            
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Course</label>
+                                <select id="student_filter_course" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #f8fafc;">
+                                    <option value="">All Courses</option>
+                                    <option value="1">BSBA</option>
+                                    <option value="2">BSCS</option>
+                                    <option value="3">BSTM</option>
+                                    <option value="4">BSHM</option>
+                                    <option value="5">BEED</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Year Level</label>
+                                <select id="student_filter_year" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #f8fafc;">
+                                    <option value="">All Year Levels</option>
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase;">Section</label>
+                                <select id="student_filter_section" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #f8fafc;">
+                                    <option value="">All Sections</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="E">F</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display:none;">
+                    <button class="create-btn" id="importExcelBtn" style="background-color: #28a745; margin-left: auto; margin-right: 10px;"><i class="fa-solid fa-file-excel"></i> Import Excel</button>
+                    <button id="openStudentModal" class="create-btn" style="margin-left: 0;">+ ADD STUDENT</button>
+                    <button class="btn" onclick="openEnrollIrregularModal()" style="background:#f59e0b; color:white; font-weight:600; border:none; margin-left:10px;">
+                        <i class="fa-solid fa-user-plus"></i> Enroll Irregular
+                    </button>
+                </div>
+
+                <div>
+                    <div class="table-container1">
+                        <div class="table-wrapper">
+                            <table id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>SCHOOL ID</th>
+                                        <th>NAME</th>
+                                        <th>COURSE</th>
+                                        <th>YEAR & SECTION</th>
+                                        <th>STATUS</th> <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students_body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="rightside">
+                        <div class="avatar-container">
+                            <div class="avatar"><i class="fa-solid fa-user-graduate"></i></div>
+                        </div>
+
+                        <h3 id="detail_student_name">STUDENT NAME</h3>
+
+                        <div class="info">
+                            <p><strong>School ID:</strong> <span id="detail_student_id">-</span></p>
+                            <p><strong>Gender:</strong> <span id="detail_student_gender">-</span></p>
+                            <p><strong>Email:</strong> <span id="detail_student_email">-</span></p>
+                            <p><strong>Phone:</strong> <span id="detail_student_phone">-</span></p>
+
+                            <hr>
+
+                            <h4>ACADEMIC INFORMATION</h4>
+                            <p><strong>Course:</strong> <span id="detail_student_course">-</span></p>
+                            <p><strong>Year Level:</strong> <span id="detail_student_year">-</span></p>
+                            <p><strong>Section:</strong> <span id="detail_student_section">-</span></p>
+
+                            <div class="modal-buttons">
+                                <button id="edit_student_btn" class="edit">EDIT</button>
+                                <button id="delete_student_btn" class="delete">DELETE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="calendar" class="page hidden">
+                <div class="container space-y-4">
+                <div class="flex items-center justify-between flex-wrap gap-4">
+
+                    <div>
+                    <h1 class="flex items-center gap-2"><i data-lucide="calendar-days" style="width:28px;height:28px;color:var(--primary)"></i> Events & Activities</h1>
+                    <p class="subtitle">Manage school events, examinations, activities, and room reservations</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="eventCalViewBtn"><i data-lucide="layout-grid" style="width:14px;height:14px"></i> Calendar</button>
+                            <button class="view-btn" id="eventListViewBtn"><i data-lucide="list" style="width:14px;height:14px"></i> List</button>
+                        </div>
+                        <button class="btn btn-primary" id="openNewEventBtn"><i data-lucide="plus" style="width:16px;height:16px"></i> New Event</button>
+                    </div>
+
+                </div>
+                
+                <div class="grid grid-4 gap-4" id="statsRow"></div>
+                
+                <div class="grid grid-3 gap-4" id="highlights"></div>
+                
+                <div class="flex gap-3 flex-wrap items-center">
+                    <div class="search-wrap" style="flex:1;max-width:320px"><i data-lucide="search"></i><input id="searchInput" placeholder="Search events..."></div>
+                    <select id="typeFilter" style="width:160px">
+                        <option value="all">All Types</option><option value="academic">Academic</option><option value="exam">Examination</option>
+                        <option value="sports">Sports</option><option value="cultural">Cultural</option><option value="meeting">Meeting</option><option value="holiday">Holiday</option>
+                    </select>
+                    <select id="statusFilter" style="width:160px">
+                        <option value="all">All Status</option><option value="upcoming">Upcoming</option><option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option><option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div id="calendarView"></div>
+                
+                <div id="listView" class="hidden"></div>
+                
+                <div id="selectedDateEvents" class="hidden"></div>
+                </div>
+            </section>
+
+
+            <section id="logs_reports" class="page hidden">
+                <div class="lr-page-wrapper">
+                    <header class="page-header">
+                    <h1>Logs & Reports</h1>
+                    <p class="subtitle">Track system activity, monitor conflicts, and generate reports</p>
+                    </header>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span class="stat-label">Total Sections</span>
+                                <span class="stat-value" id="lr_stat_sections">0</span>
+                                <span class="stat-trend">Registered in system</span>
+                            </div>
+                            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span class="stat-label">Active Conflicts</span>
+                                <span class="stat-value" id="lr_stat_conflicts">0</span>
+                                <span class="stat-trend">Requires resolution</span>
+                            </div>
+                            <div class="stat-icon icon-warning" style="color: #d97706; background: #fef3c7;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span class="stat-label">Total Teachers</span>
+                                <span class="stat-value" id="lr_stat_teachers">0</span>
+                                <span class="stat-trend">Active faculty</span>
+                            </div>
+                            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <span class="stat-label">Total Rooms</span>
+                                <span class="stat-value" id="lr_stat_rooms">0</span>
+                                <span class="stat-trend">Available for scheduling</span>
+                            </div>
+                            <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z"/></svg></div>
+                        </div>
+                    </div>
+
+                    <div class="tabs-container">
+                    <div class="tabs-list">
+                        <button class="tab-btn active" data-tab="activity">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+                        Activity Log
+                        </button>
+                        <button class="tab-btn" data-tab="conflicts">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                        Conflict Log
+                        </button>
+                        <button class="tab-btn" data-tab="analytics">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/></svg>
+                        Analytics
+                        </button>
+                        <button class="tab-btn" data-tab="export">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                        Export Reports
+                        </button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-activity">
+                        <div class="lr-card">
+                        <div class="card-header">
+                            <div class="card-header-top">
+                            <div>
+                                <h2 class="card-title">System Activity Log</h2>
+                                <p class="card-desc">Track all changes made across the scheduling system</p>
+                            </div>
+                                <div class="card-actions">
+                                    <div class="card-actions">
+                                        <button class="lr-btn btn-outline btn-sm" onclick="window.location.href='../api/generateReport.php?type=logs'" style="pointer-events: auto;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> 
+                                            Export Logs
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="separator">
+                            <div class="filters-row">
+                            <div class="search-wrap">
+                                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="lrSearchInput" placeholder="Search activity logs..." class="lr-input search-input">
+                            </div>
+                            <select id="lrModuleFilter" class="lr-select">
+                                <option value="all">All Modules</option>
+                                <option value="sections">Sections</option>
+                                <option value="subjects">Subjects</option>
+                                <option value="teachers">Teachers</option>
+                                <option value="rooms">Rooms</option>
+                                <option value="schedules">Schedules</option>
+                            </select>
+                            <select id="lrStatusFilter" class="lr-select">
+                                <option value="all">All Status</option>
+                                <option value="success">Success</option>
+                                <option value="warning">Warning</option>
+                                <option value="destructive">Error</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-wrap">
+                            <table class="lr-table">
+                                <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Action</th>
+                                    <th>Module</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody id="activityTableBody"></tbody>
+                            </table>
+                            </div>
+                            <div class="table-footer">
+                                <span id="logCount" class="text-muted">Showing 0 to 0 of 0 entries</span>
+                                <div class="lr-pagination">
+                                    <button id="lrPrevPageBtn" class="lr-btn btn-outline btn-sm" disabled>Previous</button>
+                                    <button id="lrNextPageBtn" class="lr-btn btn-outline btn-sm">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-conflicts">
+                        <div class="lr-card">
+                            <div class="card-header">
+                                <div class="card-header-top">
+                                    <div>
+                                        <h2 class="card-title">Schedule Conflict Log</h2>
+                                        <p class="card-desc">Monitor and track scheduling conflicts and their resolutions</p>
+                                    </div>
+                                    <div class="card-actions">
+                                        <span class="lr-badge badge-red">0 Unresolved</span>
+                                        <span class="lr-badge badge-green" style="display:none;">0 Resolved</span>
+                                    </div>
+
+                                    <div class="card-actions">
+                                        <button class="lr-btn btn-outline btn-sm" onclick="window.location.href='../api/generateReport.php?type=conflicts'" style="pointer-events: auto;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> 
+                                            Export Conflicts
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-wrap">
+                                    <table class="lr-table" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Sections Involved</th>
+                                                <th colspan="3">Conflict Details</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="conflictTableBody">
+                                            </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-analytics">
+                        <div class="charts-grid">
+                        <div class="lr-card">
+                            <div class="card-header"><h2 class="card-title">📊 Classes Scheduled per Day</h2></div>
+                            <div class="card-body chart-container"><canvas id="chartSchedules"></canvas></div>
+                        </div>
+                        <div class="lr-card">
+                            <div class="card-header"><h2 class="card-title">🥧 Room Type Utilization</h2></div>
+                            <div class="card-body chart-container"><canvas id="chartRooms"></canvas></div>
+                        </div>
+                        <div class="lr-card">
+                            <div class="card-header"><h2 class="card-title">📈 Weekly Conflict Trend</h2></div>
+                            <div class="card-body chart-container"><canvas id="chartConflicts"></canvas></div>
+                        </div>
+                        <div class="lr-card">
+                            <div class="card-header"><h2 class="card-title">👥 Teacher Load Distribution</h2></div>
+                            <div class="card-body chart-container"><canvas id="chartTeachers"></canvas></div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-export">
+                        <div class="reports-grid" id="reportsGrid"></div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="archived" class="page hidden">
+                <div class="archive-header">
+                    <h2>System Archives</h2>
+                    <p>Select a category to view and restore deleted records.</p>
+                </div>
+
+                <div class="archive-filters">
+                    <button class="filter-btn active" data-target="student-archive" data-type="students">Students</button>
+                    <button class="filter-btn" data-target="teacher-archive" data-type="teachers">Teachers</button>
+                    <button class="filter-btn" data-target="section-archive" data-type="sections">Sections</button>
+                    <button class="filter-btn" data-target="subject-archive" data-type="subjects">Subjects</button>
+                    <button class="filter-btn" data-target="room-archive" data-type="rooms">Rooms</button>
+                </div>
+
+                <hr class="separator">
+
+                <div class="archive-content">
+                    
+                    <div id="student-archive" class="archive-table-wrapper">
+                        <h3>Archived Students</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Course</th>
+                                    <th>Year</th>
+                                    <th>Date Deleted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="archiveTable"></tbody> </table>
+                    </div>
+
+                    <div id="teacher-archive" class="archive-table-wrapper hidden">
+                        <h3>Archived Teachers</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Course</th>
+                                    <th>Email</th>
+                                    <th>Date Deleted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="section-archive" class="archive-table-wrapper hidden">
+                        <h3>Archived Sections</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Course</th>
+                                    <th>Year</th>
+                                    <th>Date Deleted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sectionTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="subject-archive" class="archive-table-wrapper hidden">
+                        <h3>Archived Subjects</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Units</th>
+                                    <th>Date Deleted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjectTable"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="room-archive" class="archive-table-wrapper hidden">
+                        <h3>Archived Rooms</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room Name</th>
+                                    <th>Department</th>
+                                    <th>Capacity</th>
+                                    <th>Date Deleted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomTable"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+    </div> <div id="conflictModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Schedule Conflicts Details</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="conflictSummary">Loading conflict details...</p>
+                <div id="conflictDetailsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addSubjectModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="subjectModalTitle">Add Subject</h2> 
+            <input type="hidden" id="editSubjectId">
+
+            <label>Subject Code</label>
+            <input type="text" id="subCode" placeholder="e.g. CS101">
+
+            <label>Subject Description</label>
+            <input type="text" id="subDesc" placeholder="e.g. Intro to Computing">
+
+            <label>Year Level</label>
+            <select id="yearSelect">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+            <label>Units</label>
+                <input type="number" id="subUnits" placeholder="e.g., 3" value="3" required>
+                
+            <label>Semester</label>
+            <select id="semesterSelect">
+                <option value="1">1st Semester</option>
+                <option value="2">2nd Semester</option>
+                <option value="3">Summer</option>
+            </select>
+
+            <label>Course</label>
+            <select id="courseSelect">
+                <option value="1">BSBA</option>
+                <option value="2">BSCS</option>
+                <option value="3">BSTM</option>
+                <option value="4">BSHM</option>
+                <option value="5">BEED</option>
+                <option value="6">BSED-ENG</option>
+                <option value="7">BSED-MATH</option>
+                <option value="8">POLSCI</option>
+            </select>
+
+            <label class="modal-section-label">Preferred Mode (Optional)</label>
+            <div class="modal-flex-row">
+                <label class="modal-checkbox-label">
+                    <input type="checkbox" id="pref_online" class="mode-cb auto-width"> Online Only
+                </label>
+                <label class="modal-checkbox-label">
+                    <input type="checkbox" id="pref_ftf" class="mode-cb auto-width"> Face to Face Only
+                </label>
+            </div>
+            <p class="modal-hint">* Face-to-Face subjects will be grouped on campus days.</p>
+
+            <div class="modal-buttons">
+                <button id="closeModal">Cancel</button>
+                <button id="saveSubject">Save</button>
+            </div>
+        </div>
+    </div>
+
+   
+
+    <div id="addTeacherModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="teacherModalTitle">Add Teacher</h2> 
+            <input type="hidden" id="editTeacherId">
+            <div class="form-grid">
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" id="teacher_full_name">
+                </div>
+                <div>
+                    <label>Gender</label>
+                    <select id="teacher_gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" id="teacher_email">
+                </div>
+                <div>
+                    <label>Phone</label>
+                    <input type="text" id="teacher_phone">
+                </div>
+                <div>
+                    <label>Department</label>
+                    <select id="teacher_department">
+                        <option value="BSBA">BSBA</option>
+                        <option value="BSCS">BSCS</option>
+                        <option value="BSTM">BSTM</option>
+                        <option value="BSHM">BSHM</option>
+                        <option value="BEED">BEED</option>
+                        <option value="SHARED">SHARED</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Position</label>
+                    <input type="text" id="teacher_position">
+                </div>
+                <div>
+                    <label>Specialization</label>
+                    <input type="text" id="teacher_specialization">
+                </div>
+                <div>
+                    <label>Teaching Load</label>
+                    <input type="text" id="teacher_teaching_load">
+                </div>
+
+                <div class="full-width">
+                    <label>Preferred Teaching Day (Optional)</label>
+                    <select id="preferred_day" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="Any">Any Day (No Preference)</option>
+                        <option value="MWF">MWF (Monday/Wednesday/Friday)</option>
+                        <option value="TTH">TTH (Tuesday/Thursday)</option>
+                        <option value="Saturday">Saturday Only</option>
+                    </select>
+                </div>
+
+                <div class="full-width">
+                    <label class="modal-section-label">Preferred Subjects (Optional)</label>
+                    
+                    <div class="warning-box">
+                        <label class="warning-label">
+                            <input type="checkbox" id="teacher_is_strict" class="auto-width">
+                            STRICT MODE: Assign ONLY the selected subjects above.
+                        </label>
+                        <small class="warning-hint">(If checked, this teacher will NEVER be assigned random subjects)</small>
+                    </div>
+                    
+                    <div class="filter-row">
+                        <input type="text" id="ts_search" class="filter-input" placeholder="Search subject...">
+                        
+                        <select id="ts_filter_course" class="filter-select" style="width: 100px;">
+                            <option value="">All Courses</option>
+                            <option value="1">BSBA</option>
+                            <option value="2">BSCS</option>
+                            <option value="3">BSTM</option>
+                            <option value="4">BSHM</option>
+                            <option value="5">BEED</option>
+                            <option value="SHARED">SHARED</option>
+                        </select>
+
+                        <select id="ts_filter_year" class="filter-select" style="width: 80px;">
+                            <option value="">All Years</option>
+                            <option value="1">1st</option>
+                            <option value="2">2nd</option>
+                            <option value="3">3rd</option>
+                            <option value="4">4th</option>
+                        </select>
+                    </div>
+
+                    <div id="teacher_subject_list" class="scrollable-list">
+                        Loading subjects...
+                    </div>
+                </div>
+            </div> <div class="modal-buttons">
+                <button id="closeTeacherModal" class="close-btn">Cancel</button>
+                <button id="saveTeacher">Save</button>
+            </div>
+        </div>
+    </div>
+        <div id="teacherSubjectModal" class="modal hidden">
+        <div class="modal-content ts-modal-content">
+            <span class="close-btn" id="closeTeacherSubjectModal">&times;</span>
+            <h2 id="tsModalTitle" class="ts-modal-title">Subject Description</h2>
+            <p id="tsModalCode" class="ts-modal-code">CODE</p>
+            
+            <table class="modern-data-table ts-modal-table">
+                <thead>
+                    <tr>
+                        <th>Course/Section</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Room</th>
+                    </tr>
+                </thead>
+                <tbody id="tsModalBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="addSectionModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Add Section</h2>
+
+            <label>Section Name</label>
+            <input type="text" id="sectionName">
+
+            <label>Course</label>
+            <select id="sectionCourseSelect">
+                <option value="1">BSBA</option>
+                <option value="2">BSCS</option>
+                <option value="3">BSTM</option>
+                <option value="4">BSHM</option>
+                <option value="5">BEED</option>
+            </select>
+
+            <label>Year Level</label>
+            <select id="sectionYearSelect">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+
+            <h3>Select Subjects</h3>
+            <div id="sectionSubjects"></div>
+
+            <div class="modal-buttons">
+                <button id="closeSectionModal">Cancel</button>
+                <button id="saveSection">Save</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="editSectionModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Edit Section</h2>
+                <span class="close-btn" onclick="document.getElementById('editSectionModal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editSecId">
+                <div class="form-group">
+                    <label>Section Name</label>
+                    <input type="text" id="editSecName" class="form-control" required>
+                </div>
+                <div class="form-grid">
+                    <div>
+                        <label>Course</label>
+                        <select id="editSecCourse" class="form-control">
+                            <option value="BSCS">BSCS</option>
+                            <option value="BSBA">BSBA</option>
+                            <option value="BSTM">BSTM</option>
+                            <option value="BSHM">BSHM</option>
+                            <option value="BEED">BEED</option>
+                            <option value="BSED-ENG">BSED-ENG</option>
+                            <option value="BSED-MATH">BSED-MATH</option>
+                            <option value="POLSCI">POLSCI</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Year Level</label>
+                        <select id="editSecYear" class="form-control">
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>Default Room (Optional)</label>
+                    <select id="editSecRoom" class="form-control">
+                        <option value="">None (Auto-assign)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="document.getElementById('editSectionModal').style.display='none'">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEditedSection()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="manageSectionSubjectsModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px; padding: 0; overflow: hidden;">
+            <div class="modal-header" style="padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <h2 id="manageSubjTitle" style="margin: 0; font-size: 18px; color: #1e293b;">Manage Subjects</h2>
+                <span class="close-btn" onclick="document.getElementById('manageSectionSubjectsModal').style.display='none'" style="cursor: pointer; font-size: 24px; color: #64748b;">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 20px; background: #fff;">
+                <input type="hidden" id="manageSubjSecId">
+                <div id="manageSubjList" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+                    </div>
+            </div>
+            <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; background: #f8fafc;">
+                <button class="btn btn-ghost" onclick="document.getElementById('manageSectionSubjectsModal').style.display='none'">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSectionSubjects()"><i class="fa-solid fa-save" style="margin-right: 5px;"></i> Save Subjects</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="addStudentModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Add Student</h2>
+            <input type="hidden" id="editOriginalStudentId">
+            
+            <label>School ID</label>
+            <input type="text" id="input_student_id" placeholder="e.g. 2023-00123">
+
+            <label>Full Name</label>
+            <input type="text" id="student_full_name">
+
+            <label>Gender</label>
+            <select id="student_gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label>Email</label>
+            <input type="email" id="student_email">
+
+            <label>Phone</label>
+            <input type="text" id="student_phone">
+
+            <label>Course</label>
+            <select id="student_course">
+                <option value="1">BSBA</option>
+                <option value="2">BSCS</option>
+                <option value="3">BSTM</option>
+                <option value="4">BSHM</option>
+                <option value="5">BEED</option>
+            </select>
+
+            <label>Year Level</label>
+            <select id="student_year_level">
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+            </select>
+
+            <label>Section</label>
+            <select id="student_section">
+                <option value="">Select Section</option>
+            </select>
+            
+            <div class="modal-buttons">
+                <button id="closeStudentModal">Cancel</button>
+                <button id="saveStudent">Save</button>
+            </div>
+        </div>
+    </div>
+
+   
+
+    <div id="editScheduleSlotModal" class="modal hidden">
+        <div class="modal-content modal-card-md">
+            
+            <h3 class="modal-title-clean">
+                <i class="fa-solid fa-pen-to-square"></i> Edit Class Details
+            </h3>
+            <hr class="modal-divider">
+            
+            <input type="hidden" id="editSlotCardId">
+            
+            <div class="form-grid-2col">
+                <div>
+                    <label class="modal-form-label">Day of Week</label>
+                    <select id="editSlotDay" class="filter-dropdown full-width-input">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="modal-form-label">Time Slot</label>
+                    <div class="time-picker-wrapper">
+                        <input type="time" id="editSlotStartTime" class="filter-dropdown time-picker-input">
+                        <span class="time-separator">-</span>
+                        <input type="time" id="editSlotEndTime" class="filter-dropdown time-picker-input">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="modal-form-label">Delivery Mode</label>
+                    <select id="editSlotMode" class="filter-dropdown full-width-input">
+                        <option value="FTF">Face-to-Face</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="modal-form-label">Assigned Teacher</label>
+                    <select id="editSlotTeacher" class="filter-dropdown full-width-input">
+                        <option value="">TBA (Unassigned)</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-span-2">
+                    <label class="modal-form-label">Assigned Room</label>
+                    <select id="editSlotRoom" class="filter-dropdown full-width-input">
+                        <option value="">TBA (Unassigned)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer-actions">
+                <button id="cancelSlotEditBtn" class="btn-cancel">Cancel</button>
+                <button id="saveSlotEditBtn" class="success-btn btn-apply">
+                    <i class="fa-solid fa-check"></i> Apply Changes
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="bulkGenerateModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Bulk Generator</h2>
+                <span class="close-btn" id="closeBulkModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Select a course and year level to automatically generate schedules for all matching sections. Existing schedules for these sections will be overwritten.</p>
+                
+                <div class="form-group">
+                    <label>Target Course</label>
+                    <select id="bulkCourseSelect" class="form-control">
+                        <option value="">-- Select Course --</option>
+                        <option value="1">BSBA</option>
+                        <option value="2">BSCS</option>
+                        <option value="3">BSTM</option>
+                        <option value="4">BSHM</option>
+                        <option value="5">BEED</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Year Level</label>
+                    <select id="bulkYearSelect" class="form-control">
+                        <option value="">-- Select Year Level --</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+
+                <div id="bulkProgressContainer">
+                    <p id="bulkProgressText">Preparing to generate...</p>
+                    <div style="width: 100%; background-color: #e2e8f0; border-radius: 8px; overflow: hidden; height: 12px;">
+                        <div id="bulkProgressBar" style="width: 0%; height: 100%; background-color: #28a745; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button id="startBulkGenerateBtn" class="create-btn">Start Bulk Generation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="publishConfirmModal" class="modal hidden">
+        <div class="modal-content publish-modal-content">
+            <div class="modal-header publish-modal-header">
+                <div class="publish-warning-icon-wrapper">
+                    <i class="fa-solid fa-triangle-exclamation publish-warning-icon"></i>
+                </div>
+            </div>
+            <div class="modal-body publish-modal-body">
+                <h2 id="publishConfirmTitle" class="publish-modal-title">Confirm Publish</h2>
+                <p id="publishConfirmMessage" class="publish-modal-message">Are you sure you want to publish this schedule?</p>
+                
+                <div class="publish-btn-group">
+                    <button id="cancelPublishBtn" class="publish-btn-cancel">Cancel</button>
+                    <button id="confirmPublishBtn" class="publish-btn-confirm" >Yes, Publish Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addRoomModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="roomModalTitle">Add New Room</h2>
+            <input type="hidden" id="editRoomId">
+            <label>Room Name</label>
+            <input type="text" id="newRoomName" placeholder="e.g. Room 401" />
+            
+            <div class="form-grid">
+                <div>
+                <label>Building</label>
+                <select id="newRoomBuilding">
+                    <option>Main Building</option>
+                    <option>Annex Building</option>
+                    <option>Sports Complex</option>
+                </select>
+                </div>
+                <div><label>Floor</label><input type="number" id="newRoomFloor" value="1" min="1" max="5" /></div>
+            </div>
+            
+            <div class="form-grid">
+                <div><label>Capacity</label><input type="number" id="newRoomCapacity" value="30" min="1" /></div>
+                <div>
+                <label>Type</label>
+                <select id="newRoomType">
+                    <option value="lecture">Lecture</option>
+                    <option value="laboratory">Laboratory</option>
+                    <option value="auditorium">Auditorium</option>
+                    <option value="conference">Conference</option>
+                    <option value="gymnasium">Gymnasium</option>
+                    <option value="multipurpose">Multi-Purpose</option>
+                </select>
+                </div>
+            </div>
+            
+            <div style="margin-top: 10px;">
+                <label>Assigned Department</label>
+                <select id="newRoomDepartment" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 10px;">
+                    <option value="SHARED">SHARED (All Courses)</option>
+                    <option value="BSBA">BSBA</option>
+                    <option value="BSCS">BSCS</option>
+                    <option value="BSTM">BSTM</option>
+                    <option value="BSHM">BSHM</option>
+                    <option value="BEED">BEED</option>
+                    <option value="BSED-ENG">BSED-ENG</option>
+                    <option value="BSED-MATH">BSED-MATH</option>
+                    <option value="POLSCI">POLSCI</option>
+                </select>
+            </div>
+
+            <label>Amenities</label>
+            
+            <div class="amenity-toggles" id="amenityToggles"></div>
+            
+            <div class="modal-buttons" style="margin-top: 20px;">
+                <button id="cancelAddRoom" class="close-btn">Cancel</button>
+                <button id="confirmAddRoom">Save Room</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="createModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 650px;">
+            <span class="close-btn" onclick="document.getElementById('createModal').style.display='none';">&times;</span>
+            <h2 style="margin-top: 0; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="calendar-days" style="width:24px;height:24px;"></i> Create New Event
+            </h2>
+            
+           <form id="createEventForm" action="../api/add_new_event.php" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-2 gap-3" style="text-align: left;">
+                    <div class="form-group" style="grid-column:span 2"><label>Event Title *</label><input name="title" placeholder="e.g. IT Seminar" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    <div class="form-group"><label>Event Type</label><select name="type" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"><option value="academic">Academic</option><option value="exam">Examination</option><option value="sports">Sports</option><option value="cultural">Cultural</option><option value="meeting">Meeting</option><option value="holiday">Holiday</option></select></div>
+                    <div class="form-group"><label>Status</label><select name="status" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"><option value="upcoming">Upcoming</option><option value="ongoing">Ongoing</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+                    <div class="form-group"><label>Start Date *</label><input name="startDate" type="date" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    <div class="form-group"><label>End Date</label><input name="endDate" type="date" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    <div class="form-group"><label>Start Time</label><input name="startTime" type="time" value="08:00" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    <div class="form-group"><label>End Time</label><input name="endTime" type="time" value="17:00" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    
+                    <div class="form-group">
+                        <label>Reserve Room</label>
+                        <select name="roomId" id="newRoom" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                            <option value="0">No Room (Campus Wide)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group"><label>Organizer</label><input name="organizer" placeholder="e.g. Student Affairs" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></div>
+                    <div class="form-group" style="grid-column:span 2"><label>Description</label><textarea name="description" rows="3" placeholder="Describe the event..." style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></textarea></div>
+                    
+                    <div class="form-group" style="grid-column:span 2">
+                        <label>Poster Image (Upload from Computer)</label>
+                        <input type="file" name="posterFile" id="newPosterFile" accept="image/*" style="width:100%; padding:8px; border:1px dashed #3b82f6; border-radius:4px; background: #eff6ff;">
+                        
+                        <div id="posterPreviewContainer" class="hidden" style="margin-top: 10px; text-align: center;">
+                            <img id="posterPreviewImage" src="#" style="max-height: 150px; border-radius: 6px; border: 1px solid #ccc;">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="grid-column:span 2">
+                        <label>Special Announcement / Notice (Optional)</label>
+                        <textarea name="announcement" id="newAnnouncement" rows="2" placeholder="Important notes for attendees..." style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-ghost" onclick="document.getElementById('createModal').style.display='none';">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i data-lucide="save" style="width:16px;height:16px"></i> Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal hidden">
+            <div class="modal-content" style="max-width: 500px;">
+                <span class="close-btn" onclick="closeEventDetail()">&times;</span>
+                <div id="detailContent" style="text-align: left;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="enrollIrregularModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Enroll Irregular Student</h2>
+                <span class="close-btn" onclick="document.getElementById('enrollIrregularModal').style.display='none'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>1. Select Student</label>
+                    <select id="irregStudentSelect" class="form-control" style="width: 100%; padding: 10px; border-radius: 6px;">
+                        </select>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>2. Select Scheduled Class (Seat limit: 50)</label>
+                    <select id="irregScheduleSelect" class="form-control" style="width: 100%; padding: 10px; border-radius: 6px;">
+                        </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="document.getElementById('enrollIrregularModal').style.display='none'">Cancel</button>
+                <button class="btn btn-primary" onclick="submitIrregularEnrollment()"><i class="fa-solid fa-check"></i> Enroll in Subject</button>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="app.js?v=6.0"></script>
+    <script src="events-clean.js"></script>
+    <script src="master-editor.js"></script>
+</body>
+</html>

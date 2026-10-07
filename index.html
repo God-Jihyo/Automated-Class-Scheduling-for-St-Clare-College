@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. Clare College - Automated Scheduling</title>
+    <link rel="icon" type="png" href="assets/images/sccicon.png">
+    <link rel="stylesheet" href="./assets/landingpage.css">
+    <!-- Using Inter and Oswald fonts for a similar feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    
+    <nav class="navbar">
+        <div class="logo-area">
+            <img src="./assets/images/sccicon.png" alt="Logo" class="logo">
+            <span class="college-name">ST. CLARE COLLEGE OF CALOOCAN</span>
+        </div>
+        <div class="nav-links">
+            <a href="login.html" class="login-link">Login</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="animate-pop-in">Automated Class Scheduling <br> And Calendar Management <br> System</h1>
+            <p class="animate-pop-in-delay">The Automated Scheduling and Calendar Management System is a software solution designed to automatically generate and manage schedules for academic sections.</p>
+            <a href="#features" class="btn animate-pop-in-delay-2">Learn more &rarr;</a>
+        </div>
+    </section>
+
+    <div id="features-target"></div>
+    <section id="features" class="features-section">
+        <div class="features-container">
+            
+            <!-- Card 1: Icon Left -->
+            <div class="feature-card animate-left">
+                <div class="icon-box">
+                    <img src="./assets/images/calendar.png" alt="Calendar Icon">
+                </div>
+                <div class="text-box">
+                    <h2>Automated Scheduling</h2>
+                    <p>The automated scheduling system is designed to make it easier for both students and teachers to view and follow their class schedules without confusion or manual coordination.
+                    The system automatically creates clear and organized schedules for students and teachers. It assigns subjects, time slots, and teachers while ensuring there are no conflicts or overlaps.
+                    Students can easily view their class schedules, while teachers receive balanced and properly assigned teaching loads. Overall, it simplifies scheduling, saves time, and improves organization for everyone.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: Icon Right -->
+            <div class="feature-card reverse animate-right">
+                <div class="text-box">
+                    <h2>Academic Calendar</h2>
+                    <p>The system provides an organized academic calendar that displays important dates such as class schedules, events, and deadlines. It allows students and teachers to easily view and keep track of their activities in one place. By centralizing all schedule-related information, the calendar helps users stay informed, avoid conflicts, and manage their time more effectively</p>
+                </div>
+                <div class="icon-box">
+                    <img src="./assets/images/event.png" alt="Star Icon">
+                </div>
+            </div>
+
+            <!-- Card 3: Icon Left -->
+            <div class="feature-card animate-left">
+                <div class="icon-box">
+                    <img src="./assets/images/update.png" alt="Sync Icon">
+                </div>
+                <div class="text-box">
+                    <h2>Real-time Updates</h2>
+                    <p>The system provides real-time updates to ensure that any changes in schedules, rooms, or assignments are instantly reflected in the calendar. This allows students and teachers to always see the most current and accurate information. With real-time updates, users are immediately informed of changes, helping them avoid confusion, stay organized, and respond quickly to any schedule adjustments.
+.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const learnMoreBtn = document.querySelector('.btn');
+    const featuresSection = document.getElementById('features');
+    const cards = document.querySelectorAll('.feature-card');
+
+    // Function to run/restart the animation
+    const runAnimation = () => {
+        cards.forEach(card => {
+            card.classList.remove('play-anim');
+            void card.offsetWidth; // Force reflow to allow restart
+            card.classList.add('play-anim');
+        });
+    };
+
+    // 1. Trigger on Button Click
+    if (learnMoreBtn) {
+        learnMoreBtn.addEventListener('click', () => {
+            runAnimation();
+        });
+    }
+
+    // 2. Trigger on Scroll (Intersection Observer)
+    const observerOptions = {
+        threshold: 0.2 // Triggers when 20% of the section is visible
+    };
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                runAnimation();
+                // Optional: stop observing if you only want it to animate once per page load
+                // scrollObserver.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    if (featuresSection) {
+        scrollObserver.observe(featuresSection);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    width: 900px;
+    height: 550px;
+    background: white;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: #000;
+    width: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    border-top-right-radius: 200px; /* Creates the curved divider */
+    border-bottom-right-radius: 200px;
+}
+
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.icon-item {
+    text-decoration: none;
+    color: white;
+    font-size: 10px;
+    transition: transform 0.3s ease; /* Hover effect transition */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-item img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 5px;
+    object-fit: contain;
+}
+
+/* Zoom Effect */
+.icon-item:hover {
+    transform: scale(1.15);
+}
+
+.wide {
+    grid-column: span 3;
+}
+
+/* Login Form Styling */
+.login-section {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.college-logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border-radius: 25px;
+    border: 1px solid #eee;
+    background: #f9f9f9;
+    outline: none;
+}
+.input-group i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.icon-placeholder {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background-color: #ff3333;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #cc0000;
+}
+/* Enable clicking on the toggle password icon */
+.toggle-password {
+    pointer-events: auto !important; 
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #ff3333; /* Optional: matches your theme's red color on hover */
+}
+
+/* Responsiveness: Hide black sidebar on small screens */
+@media (max-width: 768px) {
+    body{
+        height: auto;
+    }
+    .main-container {
+        width: 90%;
+        height: auto;
+        border-radius: 20px;
+    }
+    
+    .sidebar {
+        display: none; /* Hides the black section */
+    }
+
+    .login-section {
+        width: 100%;
+        padding: 50px 20px;
+    }
+}

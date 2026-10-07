@@ -1,0 +1,162 @@
+:root {
+  --primary-bg: url('assets/images/bg.png');
+  --text-color: white;
+  --btn-border: white;
+  --card-bg: rgb(211, 49, 49);
+  --card-border: #ffeb3b;
+  --card-text: #f1f1f1;
+  --circle-color: red;
+}
+
+body{
+    background-image: var(--primary-bg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    min-height: 100vh;
+}
+.sccicon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sccicon img{
+    width: 200px;
+    height: auto;
+}
+.name{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    
+}
+
+.system-name{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 50px;
+    color: white;
+    text-align: center;
+    
+}
+.btn-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.btn{
+    position: relative;
+    font-size: 18px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--btn-border);
+    border-radius: 100px;
+    padding: 12px 50px 12px 20px;
+    width: 200px;
+    height: 70px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+.btn:hover{
+    background-color: var(--circle-color);
+    transform: scale(1.05);
+    
+}
+.btn .circle{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    height: 25px;
+    width: 25px;
+    background-color: var(--circle-color);
+    transition: background-color 0.3s ease;
+    border-radius: 50%;
+}
+.btn:hover .circle{
+    background-color: var(--text-color);
+}
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 20px;
+    flex-wrap: wrap;
+    }
+
+.feature-card {
+    background-color: var(--circle-color);
+    opacity: 0.7;
+    border-top: 5px solid #ffeb3b;
+    border-radius: 8px;
+    padding: 20px;
+    width: 280px;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+.feature-card:focus {
+  outline: 2px solid var(--card-border);
+  outline-offset: 2px;
+}
+
+.icon {
+    float: left;
+    font-size: 40px;
+    margin-top: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.icon img{
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+}
+
+h3 {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #fff;
+}
+
+p {
+    font-size: 14px;
+    color: #f1f1f1;
+}
+@media (max-width: 768px) {
+  .sccicon img {
+    width: 150px;
+  }
+  .name {
+    font-size: 24px;
+  }
+  .system-name {
+    font-size: 36px;
+  }
+  .feature-card {
+    width: 80%;
+    text-align: center;
+  }
+  .icon {
+    float: none;
+    display: block;
+    margin: 0 auto 10px auto;
+  }
+  h3 {
+    font-size: 16px;
+ }
+  p {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,240 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    background-color: #000;
+    background-image: url(./images/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* Navbar Styling */
+.navbar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    z-index: 10;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 60px;
+    width: auto;
+}
+
+.college-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.login-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    padding-left: 20px;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.hero-content h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Button Styling */
+.btn {
+    display: inline-block;
+    background: #ffffff;
+    color: #000000;
+    padding: 15px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+#features-target{
+    display: block;
+    position: relative;
+    top: -20px; 
+    visibility: hidden;
+}
+
+.btn:hover {
+    background: transparent;
+    color: #ffffff;
+    border-color: #ffffff;
+    transform: translateY(-3px);
+}
+
+.features-section {
+    min-height: 100vh;
+    padding: 50px 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden; /* Prevents scrollbars during animation */
+}
+
+.features-container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: #d32f2f; /* Deep Red */
+    border: 5px solid #ffeb3b; /* Yellow Border */
+    border-radius: 60px;
+    padding: 30px 50px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    color: white;
+}
+
+.feature-card.reverse {
+    flex-direction: row;
+    text-align: right;
+}
+
+.icon-box img {
+    width: 100px;
+    height: 100px;
+    filter: brightness(0) invert(1); /* Makes icons white */
+}
+
+.text-box h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.text-box p {
+    font-size: 1rem;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+/* Keyframes for Transform Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-pop-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-pop-in-delay {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.3s forwards;
+}
+
+.animate-pop-in-delay-2 {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+
+/* 1. Set initial state: Hidden */
+.feature-card {
+    opacity: 0;
+}
+
+/* 2. Only play animation when the .active class is present on the section */
+.features-section.active .animate-left {
+    animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.features-section.active .animate-right {
+    animation: slideInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Initial state: Invisible and ready to animate */
+.feature-card.animate-left,
+.feature-card.animate-right {
+    opacity: 0;
+    transition: opacity 0.5s ease; /* Smooth fade in case of slow triggers */
+}
+
+/* Animation trigger classes */
+.play-anim.animate-left {
+    animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.play-anim.animate-right {
+    animation: slideInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Your existing keyframes remain the same */
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card, .card.reverse {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+        border-radius: 30px;
+    }
+}

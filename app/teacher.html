@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Portal</title>
+    <link rel="stylesheet" href="user.css"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</head>
+<body>
+
+            <header class="floating-header">
+                <div class="nav-profile">
+                        <img src="../assets/images/sccicon.png" alt="Profile" id="userProfileImg" style="cursor: pointer; transition: 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="document.getElementById('profileSettingsModal').style.display='flex';" title="Click to open Profile Settings">
+                        
+                        <div class="nav-profile-info">
+                            <span class="user-name-display" id="sidebarName">Loading...</span>
+                            <span class="user-id-display" id="sidebarId">ID: --------</span>
+                        </div>
+
+                
+                
+                <div class="notification-wrapper" id="notifWrapper">
+                    <i class="fa-regular fa-bell bell-icon" onclick="toggleNotifications()"></i>
+                    <span class="notif-badge" id="notifBadge">0</span>
+                    
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>Notifications</span>
+                            <span style="font-size: 0.8rem; color: #0284c7; cursor: pointer; font-weight: normal;" onclick="markNotificationsRead()"><i class="fa-solid fa-check-double"></i> Mark all read</span>
+                        </div>
+                        <div class="notif-body" id="notifList">
+                            <div style="padding: 20px; text-align: center; color: #94a3b8;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <ul>
+                    <li class="active"><a href="#" data-target="dashboardView"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                    <li><a href="#" data-target="subjectsView"><i class="fa-solid fa-book"></i> Assigned Subjects</a></li>
+                    <li><a href="#" data-target="scheduleView"><i class="fa-solid fa-calendar-days"></i> Teaching Schedule</a></li>
+                    <li><a href="#" data-target="eventsView"><i class="fa-solid fa-flag"></i> Campus Events</a></li>
+                    <li><a href="#" data-target="consultationsView"><i class="fa-solid fa-comments"></i> Consultation Hub</a></li>
+
+                    <li>
+                        <a href="#" data-target="settingsView">
+                            <i class="fa-solid fa-gear"></i> 
+                        </a>
+                    </li>
+
+                    <a href="#" onclick="handleLogout(); return false;">
+                        <i class="fa-solid fa-right-from-bracket"></i> 
+                    </a>
+
+
+                </ul>
+            </nav>
+
+
+        </header>
+
+        <main class="main-wrapper">
+            
+            <section class="content-header">
+                <div class="header-left">
+                    <h2 id="welcomeName">Hello, User! 👋</h2>
+                    <p id="currentDate">Loading Date...</p>
+                </div>
+            </section>
+
+            <section id="dashboardView" class="view-section active-view">
+                <div class="dashboard-poster-carousel">
+                    <div class="poster-track" id="posterTrack">
+                        <div class="poster-slide" style="background-image: url('../assets/images/poster1.png');"></div>
+                        <div class="poster-slide" style="background-image: url('../assets/images/poster2.png');"></div>
+                        <div class="poster-slide" style="background-image: url('../assets/images/poster3.jpg');"></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Subjects</h3>
+                        <p id="totalSubjectsCount">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Classes Today</h3>
+                        <p id="classesTodayCount">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Requests</h3>
+                        <p id="consultationCount">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="subjectsView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px;">
+                    <h2>Assigned Subjects</h2>
+                    <p style="color: #64748b;">Classes and sections you are currently teaching.</p>
+                </div>
+                <div class="table-card">
+                    <div class="table-container">
+                        <table id="enrolledSubjectsTable">
+
+                            <tbody id="assignedSubjectsBody">
+                                <tr><td colspan="8" style="text-align: center; padding: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading subjects...</td></tr>
+
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Course No.</th>
+                                        <th>Descriptive Title</th>
+                                        <th>Units</th>
+                                        <th>Section</th>
+                                        <th>Time</th>
+                                        <th>Days</th>
+                                        <th>Room</th>
+                                        <th>Action</th> 
+                                    </tr>
+
+                            <tfoot>
+                                <tr style="background-color: #f8fafc; font-weight: bold;">
+                                    <td colspan="3" style="text-align: right; color: #0f172a; padding-right: 20px;">TOTAL TEACHING UNITS:</td>
+                                    <td id="totalTeachingUnitsLabel" colspan="5" style="text-align: left; color: #10b981; font-size: 1.2rem;">0</td>
+                                </tr>
+                            </tfoot>
+
+                            </thead>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="scheduleView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px;">
+                    <h2>My Weekly Schedule</h2>
+                    <p style="color: #64748b;">Your beautiful, color-coded class timetable.</p>
+                </div>
+                <div class="table-card" style="padding: 20px;">
+                    <div class="schedule-wrapper" id="scheduleContainer">
+                        <div style="text-align: center; width: 100%; padding: 40px; color: #64748b;">
+                            <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Loading schedule...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+           <section id="consultationsView" class="view-section">
+                <div class="table-card" style="width: 100%;">
+                    
+                    <div class="hub-header">
+                        <h3>Communication Hub</h3>
+                        <button class="btn-submit compose-btn" id="btnComposeNew">
+                            <i class="fa-solid fa-pen"></i> New Request
+                        </button>
+                    </div>
+
+                    <div class="hub-tabs">
+                        <button class="tab-btn active" id="tabInbox">Inbox</button>
+                        <button class="tab-btn" id="tabSent">Sent Requests</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th id="colPersonHeader">From</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messagingTableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">Loading messages...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="subjectsView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px;">
+                    <h2>Assigned Subjects</h2>
+                    <p style="color: #64748b;">Manage your classes and students.</p>
+                </div>
+                <div class="table-card">
+                    <div style="text-align: center; padding: 50px; color: #94a3b8;">
+                        <i class="fa-solid fa-person-chalkboard" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>Subjects Module Loading...</h3>
+                        <p>We will build the API to fetch your assigned subjects here next.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scheduleView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px;">
+                    <h2>Teaching Schedule</h2>
+                    <p style="color: #64748b;">Your weekly class timetable.</p>
+                </div>
+                <div class="table-card">
+                    <div style="text-align: center; padding: 50px; color: #94a3b8;">
+                        <i class="fa-solid fa-calendar-week" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>Schedule Visualizer Loading...</h3>
+                        <p>We will build the visual timetable grid here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="eventsView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h2>Campus Events</h2>
+                        <p style="color: #64748b;">Stay updated with official school activities and announcements.</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 5px; background: #e2e8f0; padding: 4px; border-radius: 8px;">
+                        <button id="btnViewFeed" style="padding: 6px 15px; border: none; background: white; border-radius: 5px; font-weight: bold; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #0f172a;"><i class="fa-solid fa-list"></i> News Feed</button>
+                        <button id="btnViewCal" style="padding: 6px 15px; border: none; background: transparent; border-radius: 5px; font-weight: bold; cursor: pointer; color: #64748b;"><i class="fa-solid fa-calendar-days"></i> Calendar</button>
+                    </div>
+                </div>
+                
+                <div class="events-feed" id="eventsFeedContainer">
+                    <div style="text-align: center; padding: 50px; color: #94a3b8;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>Loading Events Board...</h3>
+                    </div>
+                </div>
+
+                <div id="eventsCalendarContainer" style="display: none;">
+                    </div>
+            </section>
+
+
+            <section id="settingsView" class="view-section">
+                <div class="content-header" style="margin-bottom: 20px;">
+                    <h2>Account Settings</h2>
+                    <p style="color: #64748b;">Manage your personal information and security preferences.</p>
+                </div>
+
+
+                <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+    
+                    <div style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid #f1f5f9; flex-shrink: 0;">
+                        <img id="settingsProfilePreview" src="../assets/images/sccicon.png" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #0f172a; font-size: 1.1rem; font-weight: 800;">Profile Picture</h4>
+                        <p style="margin: 0 0 12px 0; font-size: 0.85rem; color: #64748b;">Update your account avatar. Recommended size: 256x256px.</p>
+                        
+                        <button onclick="document.getElementById('settingsPicInput').click();" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Upload New Image
+                        </button>
+                        
+                        <input type="file" id="settingsPicInput" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="uploadProfilePicture(this)">
+                    </div>
+                </div>
+                
+
+
+                <div class="settings-container">
+                    <div class="settings-tabs">
+                        <button class="settings-tab active" onclick="switchSettingsTab('overview')"><i class="fa-solid fa-address-card"></i> Overview</button>
+                        <button class="settings-tab" onclick="switchSettingsTab('personal')"><i class="fa-solid fa-user-pen"></i> Personal Details</button>
+                        <button class="settings-tab" onclick="switchSettingsTab('security')"><i class="fa-solid fa-shield-halved"></i> Security</button>
+                    </div>
+
+                    <div class="settings-content-area">
+                        <div id="tab-overview" class="settings-pane active">
+                            <h3 style="margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">Official Record</h3>
+                            <div class="info-grid">
+                                <div class="info-group">
+                                    <label>Full Name</label>
+                                    <p id="set-fullName" style="font-weight: bold; color: #1e293b;">Loading...</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>School ID Number</label>
+                                    <p id="set-idNum" style="font-weight: bold; color: #1e293b;">Loading...</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Department / Course</label>
+                                    <p id="set-department" style="font-weight: bold; color: #1e293b;">Loading...</p>
+                                </div>
+                                <div class="info-group">
+                                    <label>Account Type</label>
+                                    <p id="set-role" style="font-weight: bold; color: #1e293b; text-transform: capitalize;">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-personal" class="settings-pane" style="display: none;">
+                            <h3 style="margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">Contact Information</h3>
+                            <form id="personalSettingsForm">
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label>Registered Email Address <span style="color: #ef4444;">*</span></label>
+                                    <input type="email" id="set-email" class="form-control" style="background-color: #f1f5f9; cursor: not-allowed; color: #64748b;" readonly title="Contact the Administrator to change your registered email.">
+                                    <small style="color: #94a3b8; display: block; margin-top: 5px;"><i class="fa-solid fa-lock"></i> Locked. Contact Admin to modify.</small>
+                                </div>
+                                
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label>Mobile Number</label>
+                                    <input type="text" id="set-phone" class="form-control" placeholder="09XX-XXX-XXXX">
+                                </div>
+
+                                <button type="button" class="btn-submit" onclick="savePersonalDetails()" style="width: auto; padding: 10px 20px; background-color: #10b981;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                            </form>
+                        </div>
+
+                        <div id="tab-security" class="settings-pane" style="display: none;">
+                            <h3 style="margin-bottom: 15px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">Update Password</h3>
+                            <form id="passwordSettingsForm">
+                                <div class="form-group" style="margin-bottom: 15px; position: relative;">
+                                    <label>Current Password</label>
+                                    <input type="password" id="set-currentPass" class="form-control" required style="padding-right: 40px;">
+                                    <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('set-currentPass', this)" style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: #64748b;"></i>
+                                </div>
+                                
+                                <div class="form-group" style="margin-bottom: 15px; position: relative;">
+                                    <label>New Password</label>
+                                    <input type="password" id="set-newPass" class="form-control" required style="padding-right: 40px;">
+                                    <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('set-newPass', this)" style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: #64748b;"></i>
+                                </div>
+                                
+                                <div class="form-group" style="margin-bottom: 20px; position: relative;">
+                                    <label>Confirm New Password</label>
+                                    <input type="password" id="set-confirmPass" class="form-control" required style="padding-right: 40px;">
+                                    <i class="fa-solid fa-eye toggle-password" onclick="togglePasswordVisibility('set-confirmPass', this)" style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: #64748b;"></i>
+                                </div>
+
+                                <button type="button" class="btn-submit" onclick="changePassword()" style="width: auto; padding: 10px 20px; background-color: #0284c7;">
+                                    <i class="fa-solid fa-key"></i> Update Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+
+        </main>
+
+
+
+    <div id="conflictModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter: blur(3px);">
+        <div style="width: 90%; max-width: 500px; border-top: 5px solid #ef4444; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;">
+            
+            <button onclick="document.getElementById('conflictModalOverlay').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 18px; color: #94a3b8; cursor: pointer;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div style="display: flex; gap: 15px; align-items: flex-start; margin-top: 10px;">
+                <div style="background: #ef4444; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0 0 8px 0; color: #991b1b; font-size: 18px;">Action Required</h3>
+                    <p id="conflictDescription" style="margin: 0; color: #475569; font-size: 14px; line-height: 1.5;">
+                        </p>
+                    
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button onclick="resolveClassConflict('online')" style="background: #1e293b; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;">
+                            <i class="fa-solid fa-laptop"></i> Go Online
+                        </button>
+                        <button onclick="resolveClassConflict('relocate')" style="background: white; color: #1e293b; border: 1px solid #cbd5e1; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;">
+                            <i class="fa-solid fa-map-location-dot"></i> Relocate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-event-ticker">
+        <div class="ticker-label">LATEST EVENTS</div>
+        <div class="ticker-text-wrapper">
+            <div class="ticker-text" id="tickerText">Loading events...</div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="composeModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-xmark close-modal" id="closeComposeModal"></i>
+            <h3 style="margin-bottom: 20px; color: #1e293b;">New Request / Message</h3>
+            
+            <form id="composeForm">
+                <div class="form-group">
+                    <label>Send To (Search User)</label>
+                    <input list="usersDatalist" class="form-control" id="recipientSearchInput" placeholder="Type a name..." autocomplete="off" required>
+                    <datalist id="usersDatalist">
+                        </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" class="form-control" id="composeSubject" placeholder="e.g., Leave Request, Grade Inquiry" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-control" id="composeMessage" placeholder="Write your message here..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Attach File (Optional)</label>
+                    <input type="file" class="form-control" id="composeFile" accept="image/*,.pdf,.doc,.docx">
+                </div>
+
+                <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="modal-overlay" id="chatModal">
+        <div class="modal-content" style="display: flex; flex-direction: column; height: 80vh;">
+            <i class="fa-solid fa-xmark close-modal" id="closeChatModal"></i>
+            
+            <div style="border-bottom: 2px solid var(--light-bg); padding-bottom: 15px; margin-bottom: 15px;">
+                <h3 id="chatSubject" style="margin-bottom: 5px; color: #1e293b;">Loading...</h3>
+                <p id="chatParticipants" style="color: #64748b; font-size: 0.9rem; margin: 0;"></p>
+            </div>
+            
+            <div class="thread-container" id="chatThread" style="flex-grow: 1; overflow-y: auto;">
+                </div>
+
+            <div style="margin-top: 15px; border-top: 2px solid var(--light-bg); padding-top: 15px;">
+                <form id="replyForm" style="display: flex; gap: 10px;">
+                    <input type="hidden" id="replyConsultationId">
+                    <textarea class="form-control" id="replyMessage" placeholder="Type your reply..." required style="min-height: 45px; margin-bottom: 0;"></textarea>
+
+                    <button type="submit" class="btn-submit" style="width: auto; padding: 10px 20px;">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="rescheduleModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #1e293b; margin: 0;"><i class="fa-solid fa-calendar-plus" style="color: #f59e0b;"></i> Request Make-Up Class</h3>
+                <span class="close-btn" style="cursor: pointer; font-size: 1.5rem;" onclick="document.getElementById('rescheduleModal').classList.remove('active')">&times;</span>
+            </div>
+            
+            <form id="rescheduleForm">
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #64748b;">Target Class:</p>
+                    <strong id="rescheduleClassTarget" style="font-size: 1.1rem; color: #0f172a;">IT101 - BSCS 1A</strong>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Temporary Date</label>
+                        <input type="date" class="form-control" id="makeupDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Requested Room</label>
+                        <select class="form-control" id="makeupRoom" required>
+                            <option value="">Checking rooms...</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" class="form-control" id="makeupStartTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" class="form-control" id="makeupEndTime" required>
+                    </div>
+                </div>
+
+                <hr style="border: none; border-top: 1px dashed #cbd5e1; margin: 15px 0;">
+
+                <div class="form-group">
+                    <label style="color: #10b981;"><i class="fa-solid fa-paper-plane"></i> Auto-Announcement to Students</label>
+                    <p style="font-size: 0.8rem; color: #64748b; margin-top: -5px; margin-bottom: 8px;">This message will be sent to the section once approved.</p>
+                    <textarea class="form-control" id="makeupAnnouncement" rows="4" required style="background: #f0fdf4; border-color: #a7f3d0; font-size: 0.9rem;"></textarea>
+                </div>
+
+                <button type="button" class="btn-submit" style="background-color: #f59e0b;" onclick="submitMakeupClass()">SUBMIT</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="setupLinksModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:25px; border-radius:10px; width:90%; max-width:400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <h3 style="margin-top:0; color:#1e293b;"><i class="fa-solid fa-link" style="color:#3b82f6;"></i> Class Links Setup</h3>
+            <p id="setupClassName" style="font-size:14px; color:#64748b; margin-bottom:15px; font-weight:600;"></p>
+            
+            <form id="setupLinksForm">
+                <input type="hidden" id="sl_subject_code" name="subject_code">
+                <input type="hidden" id="sl_section_name" name="section_name">
+                
+                <div style="margin-bottom:15px;">
+                    <label style="display:block; font-size:13px; font-weight:bold; margin-bottom:5px;">Google Meet Link:</label>
+                    <input type="url" id="sl_gmeet" name="gmeet_link" placeholder="https://meet.google.com/..." style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:5px; box-sizing:border-box;">
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <label style="display:block; font-size:13px; font-weight:bold; margin-bottom:5px;">Google Classroom Code:</label>
+                    <input type="text" id="sl_classcode" name="classroom_code" placeholder="e.g. x7y9z2a" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:5px; box-sizing:border-box;">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" onclick="document.getElementById('setupLinksModal').style.display='none'" style="padding:8px 15px; border:none; background:#e2e8f0; border-radius:5px; cursor:pointer;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="padding:8px 15px; border:none; background:#3b82f6; color:white; border-radius:5px; cursor:pointer;">Save Links</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="scheduleDetailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; padding:25px; border-radius:10px; width:90%; max-width:450px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
+            <h3 id="sd_title" style="margin-top:0; color:#1e293b; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">Subject Details</h3>
+            
+            <div style="margin-top:15px; font-size:15px; line-height:1.6;">
+                <div><strong>Section:</strong> <span id="sd_section"></span></div>
+                <div><strong>Day & Time:</strong> <span id="sd_datetime"></span></div>
+                <div><strong>Room:</strong> <span id="sd_room"></span></div>
+            </div>
+
+            <div style="margin-top:20px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
+                <h4 style="margin:0 0 10px 0; color:#334155;"><i class="fa-solid fa-laptop"></i> Virtual Access</h4>
+                <div id="sd_links_container"></div>
+            </div>
+
+            <div style="margin-top:20px; text-align:right;">
+                <button onclick="document.getElementById('scheduleDetailsModal').style.display='none'" style="padding:8px 20px; background:#ef4444; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="profilePicInput" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="uploadProfilePicture(this)">
+
+    <div id="profileSettingsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.6); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(4px);">
+        <div style="background: white; padding: 30px; border-radius: 16px; width: 90%; max-width: 350px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; animation: popIn 0.2s ease-out;">
+            <style>@keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }</style>
+            
+            <button onclick="document.getElementById('profileSettingsModal').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 20px; color: #94a3b8; cursor: pointer; transition: 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'"><i class="fa-solid fa-xmark"></i></button>
+
+            <h3 style="margin: 0 0 20px 0; color: #0f172a; text-align: center; font-weight: 800;"><i class="fa-solid fa-user-gear" style="color: #3b82f6; margin-right: 8px;"></i> Profile Settings</h3>
+            
+            <div style="text-align: center;">
+                <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border: 4px solid #f8fafc; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin: 0 auto 15px auto;">
+                    <img id="settingsProfilePreview" src="../assets/images/sccicon.png" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 20px; padding: 0 20px;">Update your account avatar. Recommended size is 256x256px.</p>
+                
+                <button onclick="document.getElementById('settingsPicInput').click();" style="background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.95rem; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload New Image
+                </button>
+                
+                <input type="file" id="settingsPicInput" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="uploadProfilePicture(this)">
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared-ui.js"></script>
+    <script src="teacher.js"></script>
+</body>
+</html>
