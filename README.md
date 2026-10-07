@@ -33,6 +33,7 @@ A web-based scheduling and academic calendar application designed to streamline 
 ## Notes:
 * Update db_connection.php with your database credentials
 * Update sendemail.php with your own email and password
+* To access admin page: Username:  admin@123 Password: admin123
 
 ## 📂 Project Structure
 
